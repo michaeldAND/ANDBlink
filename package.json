@@ -4,10 +4,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "electron": "^19.0.4"
+    "electron": "^19.0.4",
+    "electron-packager": "^15.5.1"
   },
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-packager . andblink --icon ./Logo.icns"
   },
   "repository": {
     "type": "git",
