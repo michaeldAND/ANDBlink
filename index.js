@@ -1,4 +1,7 @@
-const { app, BrowserWindow, Notification } = require('electron');
+const {
+  app, BrowserWindow, Notification,
+} = require('electron');
+const schedule = require('node-schedule');
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -17,6 +20,16 @@ function createNotification(title, body) {
 
 app.whenReady().then(() => {
   createWindow();
+  const cronString = '*/3 * * * * *';
+  const job = schedule.scheduleJob(cronString, () => {
+    console.log('yolo: ', new Date());
+  });
+
+  setTimeout(() => {
+    console.log('un-yolo');
+    job.reschedule(cronString);
+  }, 9000);
+
   createNotification('This is a title', 'This is a body');
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
