@@ -1,7 +1,8 @@
 const {
-  app, BrowserWindow, Notification, powerMonitor
+  app, BrowserWindow, Notification, powerMonitor,
 } = require('electron');
 const schedule = require('node-schedule');
+const content = require('./data');
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -15,7 +16,15 @@ const createWindow = () => {
 
 const relaxTimes = ['*/3 * * * * *', '*/1 * * * * *'];
 
-// app.whenReady -> 2 x cronstrings [break, work] -> job.schedule(50mins).reschedule(10mins).reschedule(50mins).reschedule(10mins)...
+function createNotification(title, body) {
+  const breakNotification = new Notification({ title, body });
+  breakNotification.show();
+}
+
+function restartJob(job, isWork) {
+  const timer = relaxTimes[isWork ? 0 : 1];
+  job.reschedule(timer);
+}
 
 app.whenReady().then(() => {
   createWindow();
@@ -24,6 +33,7 @@ app.whenReady().then(() => {
   const job = schedule.scheduleJob(timer, () => {
     if (!isWork) {
       console.log('notify to take break: ', new Date());
+      createNotification(content.short[0].title, content.short[0].body);
     }
     isWork = !isWork;
     restartJob(job, isWork);
@@ -39,31 +49,17 @@ app.whenReady().then(() => {
     restartJob(job, true);
   });
 
-
   powerMonitor.on('lock-screen', () => {
     console.log('locked');
     job.cancel();
   });
-
 
   powerMonitor.on('unlock-screen', () => {
     console.log('unlocked');
     restartJob(job, true);
   });
 
-  createNotification('This is a title', 'This is a body');
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
-
-
-function createNotification(title, body) {
-  const breakNotification = new Notification({ title, body });
-  breakNotification.show();
-}
-
-function restartJob(job, isWork) {
-  const timer = relaxTimes[isWork ? 0 : 1];
-  job.reschedule(timer);
-}
