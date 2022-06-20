@@ -1,0 +1,22 @@
+{
+  "name": "andblink",
+  "description": "To relax your eyes",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "dependencies": {
+    "electron": "^19.0.4"
+  },
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaeldAND/ANDBlink.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michaeldAND/ANDBlink/issues"
+  },
+  "homepage": "https://github.com/michaeldAND/ANDBlink#readme"
+}
