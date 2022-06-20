@@ -18,6 +18,8 @@ function createNotification(title, body) {
   breakNotification.show();
 }
 
+// app.whenReady -> 2 x cronstrings [break, work] -> job.schedule(50mins).reschedule(10mins).reschedule(50mins).reschedule(10mins)...
+
 app.whenReady().then(() => {
   createWindow();
   const cronString = '*/3 * * * * *';
