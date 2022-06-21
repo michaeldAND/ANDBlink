@@ -1,5 +1,5 @@
 const {
-  app, BrowserWindow, Notification, powerMonitor,
+  app, BrowserWindow, Notification, powerMonitor, ipcMain,
 } = require('electron');
 const schedule = require('node-schedule');
 
@@ -12,8 +12,12 @@ const createWindow = () => {
     height: 600,
     icon: './Logo.icns',
   });
+  const isDev = true;
 
-  win.loadURL('http://localhost:3000');
+  win.loadURL(isDev
+    ? 'http://localhost:3000'
+    : `file://${path.join(__dirname, '../build/index.html')}`);
+
   win.webContents.openDevTools();
 };
 const contentStore = new Store();
@@ -81,6 +85,10 @@ function refreshNotifications() {
 app.whenReady().then(() => {
   createWindow();
   refreshNotifications();
+
+  ipcMain.on('yolo', (event, arg) => {
+    console.log('heyyyy', arg, event); // prints "heyyyy ping"
+  });
 
   powerMonitor.on('suspend', () => {
     console.log('suspended');

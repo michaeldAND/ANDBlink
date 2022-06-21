@@ -1,28 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Checkbox, Accordion } from 'semantic-ui-react';
+import { Checkbox } from 'semantic-ui-react';
+
+// eslint-disable-next-line no-unused-vars
+// const fs = electron.remote.require('fs');
+const { ipcRenderer } = window.require('electron');
 
 function App() {
-  const [scheduleBreaks, setScheduleBreaks] = useState(0);
+  const [scheduleBreaks, setScheduleBreaks] = useState(false);
+  const [eyeStrainBreaks, setEyeStrainBreaks] = useState(false);
 
-  const scheduleBreakPanel = [
-    {
-      title: 'Schedule break',
-      content: [
-        'Schedule Break content',
-      ],
-    },
-  ];
+  useEffect(() => {
+    console.log('schedule break', scheduleBreaks);
+    console.log('eye strains break', eyeStrainBreaks);
+
+    ipcRenderer.send('yolo', JSON.stringify({ scheduleBreaks, eyeStrainBreaks }));
+  }, [scheduleBreaks, eyeStrainBreaks]);
 
   return (
-
     <>
-      <Checkbox toggle onClick={() => setScheduleBreaks(scheduleBreaks)}>
+      <Checkbox toggle onClick={() => setScheduleBreaks(!scheduleBreaks)}>
         Toggle
       </Checkbox>
-      <Accordion>
-        <Accordion fluid styled defaultActiveIndex={0} panels={scheduleBreakPanel} />
-      </Accordion>
+      <Checkbox toggle onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}>
+        Toggle
+      </Checkbox>
     </>
   );
 }
