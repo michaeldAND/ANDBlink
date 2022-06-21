@@ -105,4 +105,4 @@ dist
 andblink-*/
 .DS_Store
 
-.build/
+build/
