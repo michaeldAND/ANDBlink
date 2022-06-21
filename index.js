@@ -16,13 +16,14 @@ const createWindow = () => {
   win.loadFile('index.html');
 };
 
+// create the content store and request data, from file or from defaults
 const contentStore = new Store();
 const userSettings = contentStore.get();
 const tasks = new Array(userSettings.length);
 
 function createNotification(title, body) {
-  const breakNotification = new Notification({ title, body });
-  breakNotification.show();
+  const notification = new Notification({ title, body });
+  notification.show();
 }
 
 function scheduleJobs() {
@@ -34,25 +35,29 @@ function scheduleJobs() {
     console.log('creating scheduled job', index);
     const job = schedule.scheduleJob(setting.workCron, () => {
       if (!tasks[index].isWork) {
-        console.log('notify to take break: ', new Date());
+        console.log('notify to take break', new Date());
+        // depending on the break size, show different messages
         let contentArray = setting.isShort ? content.short : content.long;
-        const index = getRandomInt(contentArray.length);
-        let title = contentArray[index].title;
+        const random = getRandomInt(contentArray.length);
+        // replace title string with appropriate break time period
+        let title = contentArray[random].title;
         title = title.replace('%REPLACE%', setting.message);
-        createNotification(title, contentArray[index].body);
+        createNotification(title, contentArray[random].body);
       }
+      // assign the rescheduling of the job to always alternate between work and break
       tasks[index].isWork = !tasks[index].isWork;
       job.reschedule(tasks[index].isWork ? setting.workCron : setting.breakCron)
     });
     tasks[index].job = job;
-    console.log('done adding job', index);
   });
 }
 
+// cancels all active jobs
 function cancelJobs() {
   tasks.forEach(task => task.job.cancel());
 }
 
+// restarts all cancelled job, as the user just took their break
 function restartJobs() {
   tasks.forEach((task, index) => { 
     task.job.reschedule(task.workCron);
@@ -62,12 +67,7 @@ function restartJobs() {
 
 function getRandomInt(max) {
   const index = Math.floor(Math.random() * max);
-
-  if (index < max) {
-    return index;
-  }
-  console.log('max', index);
-  return max - 1;
+  return Math.min(index, max - 1);
 }
 
 app.whenReady().then(() => {

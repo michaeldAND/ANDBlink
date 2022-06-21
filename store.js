@@ -11,6 +11,7 @@ function createCron(time) {
   let secs = time;
   let isShort = false;
 
+  // timer is passed in seconds, break down to minutes and hours
   if (time > 60) {
     mins = Math.floor(time / 60);
     secs = time % 60;
@@ -22,7 +23,8 @@ function createCron(time) {
     isShort = true;
   }
 
-  let message = [];
+  // formulate a display message for the actual time for the user to see
+  const message = [];
   if (hours > 0) {
     cron[2] = `*/${hours}`;
     message.push(`${hours} hrs`);
