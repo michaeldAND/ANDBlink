@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { Checkbox } from 'semantic-ui-react';
-
 // eslint-disable-next-line no-unused-vars
-// const fs = electron.remote.require('fs');
-const { ipcRenderer } = window.require('electron');
 
 function App() {
   const [scheduleBreaks, setScheduleBreaks] = useState(false);
@@ -14,7 +11,8 @@ function App() {
     console.log('schedule break', scheduleBreaks);
     console.log('eye strains break', eyeStrainBreaks);
 
-    ipcRenderer.send('yolo', JSON.stringify({ scheduleBreaks, eyeStrainBreaks }));
+    // ipcRenderer.send('yolo', JSON.stringify({ scheduleBreaks, eyeStrainBreaks }));
+    window.electron.doThing();
   }, [scheduleBreaks, eyeStrainBreaks]);
 
   return (
