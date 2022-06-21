@@ -13,7 +13,6 @@ const createWindow = () => {
 
   win.loadURL('http://localhost:3000');
   win.webContents.openDevTools();
-  win.loadFile('index.html');
 };
 
 const relaxTimes = ['*/3 * * * * *', '*/1 * * * * *'];

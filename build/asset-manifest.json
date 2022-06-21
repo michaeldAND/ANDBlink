@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/michaeldAND/ANDBlink/static/css/main.073c9b0a.css",
+    "main.js": "/michaeldAND/ANDBlink/static/js/main.fc8ccc95.js",
+    "static/js/787.e0da3648.chunk.js": "/michaeldAND/ANDBlink/static/js/787.e0da3648.chunk.js",
+    "static/media/logo.svg": "/michaeldAND/ANDBlink/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/michaeldAND/ANDBlink/index.html",
+    "main.073c9b0a.css.map": "/michaeldAND/ANDBlink/static/css/main.073c9b0a.css.map",
+    "main.fc8ccc95.js.map": "/michaeldAND/ANDBlink/static/js/main.fc8ccc95.js.map",
+    "787.e0da3648.chunk.js.map": "/michaeldAND/ANDBlink/static/js/787.e0da3648.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.fc8ccc95.js"
+  ]
+}
