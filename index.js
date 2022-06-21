@@ -8,7 +8,7 @@ const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
-    icon: './Logo.png',
+    icon: './Logo.icns',
   });
 
   win.loadFile('index.html');
