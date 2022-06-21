@@ -1,14 +1,14 @@
 module.exports = {
   long:
   [
-    { title: 'It\'s time for your scheduled break', body: 'Take a break, have a KitKat' },
-    { title: 'It\'s time for your scheduled break', body: 'Taking time to do nothing often brings everything into perspective...' },
-    { title: 'It\'s time for your scheduled break', body: 'Grab yourself a cup of tea!' },
-    { title: 'It\'s time for your scheduled break', body: '%REPLACE% minutes for meditation!' },
+    { title: 'Time for your %REPLACE% break', body: 'Take a break, have a KitKat' },
+    { title: 'Time for your %REPLACE% break', body: 'Taking time to do nothing often brings everything into perspective...' },
+    { title: 'Time for your %REPLACE% break', body: 'Grab yourself a cup of tea!' },
+    { title: 'Time for your %REPLACE% break', body: 'A few minutes for meditation!' },
   ],
   short:
   [
-    { title: 'It\'s time to look away', body: 'Quick, your %REPLACE% seconds starts now...' },
-    { title: 'It\'s time to look away', body: 'See anything interesting 20ft away?' },
+    { title: 'Time to look away for %REPLACE%', body: 'Quick, your break starts now...' },
+    { title: 'Time to look away for %REPLACE%', body: 'See anything interesting 20ft away?' },
   ],
 };

@@ -2,7 +2,9 @@ const {
   app, BrowserWindow, Notification, powerMonitor,
 } = require('electron');
 const schedule = require('node-schedule');
+
 const content = require('./data');
+const Store = require('./store');
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -15,66 +17,82 @@ const createWindow = () => {
   win.webContents.openDevTools();
 };
 
-const relaxTimes = ['*/3 * * * * *', '*/1 * * * * *'];
+// create the content store and request data, from file or from defaults
+const contentStore = new Store();
+const userSettings = contentStore.get();
+const tasks = new Array(userSettings.length);
 
 function createNotification(title, body) {
-  const breakNotification = new Notification({ title, body });
-  breakNotification.show();
+  const notification = new Notification({ title, body });
+  notification.show();
 }
 
-function restartJob(job, isWork) {
-  const timer = relaxTimes[isWork ? 0 : 1];
-  job.reschedule(timer);
+function scheduleJobs() {
+  userSettings.forEach((setting, index) => {
+    if (!setting.active) {
+      return;
+    }
+    tasks[index] = { isWork: true, workCron: setting.workCron, breakCron: setting.breakCron };
+    console.log('creating scheduled job', index);
+    const job = schedule.scheduleJob(setting.workCron, () => {
+      if (!tasks[index].isWork) {
+        console.log('notify to take break', new Date());
+        // depending on the break size, show different messages
+        let contentArray = setting.isShort ? content.short : content.long;
+        const random = getRandomInt(contentArray.length);
+        // replace title string with appropriate break time period
+        let title = contentArray[random].title;
+        title = title.replace('%REPLACE%', setting.message);
+        createNotification(title, contentArray[random].body);
+      }
+      // assign the rescheduling of the job to always alternate between work and break
+      tasks[index].isWork = !tasks[index].isWork;
+      job.reschedule(tasks[index].isWork ? setting.workCron : setting.breakCron)
+    });
+    tasks[index].job = job;
+  });
+}
+
+// cancels all active jobs
+function cancelJobs() {
+  tasks.forEach(task => task.job.cancel());
+}
+
+// restarts all cancelled job, as the user just took their break
+function restartJobs() {
+  tasks.forEach((task, index) => { 
+    task.job.reschedule(task.workCron);
+    tasks[index].isWork = true;
+  });
 }
 
 function getRandomInt(max) {
   const index = Math.floor(Math.random() * max);
-
-  if (index < max) {
-    return index;
-  }
-  console.log('max', index);
-  return max - 1;
+  return Math.min(index, max - 1);
 }
 
 app.whenReady().then(() => {
   createWindow();
-  let isWork = true;
-  const timer = relaxTimes[isWork ? 0 : 1];
-  const job = schedule.scheduleJob(timer, () => {
-    if (!isWork) {
-      console.log('notify to take break: ', new Date());
-      let contentArray = [];
-      if (relaxTimes[1].indexOf('/') <= 2) {
-        contentArray = content.short;
-      } else {
-        contentArray = content.long;
-      }
-      const index = getRandomInt(contentArray.length);
-      createNotification(contentArray[index].title, contentArray[index].body);
-    }
-    isWork = !isWork;
-    restartJob(job, isWork);
-  });
+  scheduleJobs();
 
   powerMonitor.on('suspend', () => {
     console.log('suspended');
-    job.cancel();
+    cancelJobs();
   });
 
   powerMonitor.on('resume', () => {
     console.log('resume');
-    restartJob(job, true);
+    restartJobs();
   });
 
   powerMonitor.on('lock-screen', () => {
     console.log('locked');
-    job.cancel();
+    cancelJobs();
   });
 
   powerMonitor.on('unlock-screen', () => {
     console.log('unlocked');
-    restartJob(job, true);
+    restartJobs();
   });
 
   app.on('activate', () => {
