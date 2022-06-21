@@ -26,6 +26,16 @@ function restartJob(job, isWork) {
   job.reschedule(timer);
 }
 
+function getRandomInt(max) {
+  const index = Math.floor(Math.random() * max);
+
+  if (index < max) {
+    return index;
+  }
+  console.log('max', index);
+  return max - 1;
+}
+
 app.whenReady().then(() => {
   createWindow();
   let isWork = true;
@@ -33,7 +43,14 @@ app.whenReady().then(() => {
   const job = schedule.scheduleJob(timer, () => {
     if (!isWork) {
       console.log('notify to take break: ', new Date());
-      createNotification(content.short[0].title, content.short[0].body);
+      let contentArray = [];
+      if (relaxTimes[1].indexOf('/') <= 2) {
+        contentArray = content.short;
+      } else {
+        contentArray = content.long;
+      }
+      const index = getRandomInt(contentArray.length);
+      createNotification(contentArray[index].title, contentArray[index].body);
     }
     isWork = !isWork;
     restartJob(job, isWork);
