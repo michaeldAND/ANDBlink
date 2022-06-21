@@ -2,7 +2,7 @@
   "name": "andblink",
   "description": "To relax your eyes",
   "version": "1.0.0",
-  "main": "electron-starter.js",
+  "main": "main.js",
   "dependencies": {
     "@semantic-ui-react/css-patch": "^1.0.0",
     "@testing-library/jest-dom": "^5.16.4",
