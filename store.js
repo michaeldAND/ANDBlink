@@ -52,7 +52,20 @@ class Store {
       { workTime: 1200, breakTime: 20, active: true },
       { workTime: 7, breakTime: 3, active: true },
     ];
-    this.data = this.parseDataFile(this.path, defaults);
+    const retrievedData = this.parseDataFile(this.path, defaults);
+    this.createCronForFileData(retrievedData);
+  }
+
+  createCronForFileData(retrievedData) {
+    const fileData = retrievedData;
+    fileData.forEach((element, index) => {
+      fileData[index].workCron = createCron(element.workTime).cron;
+      const breakData = createCron(element.breakTime);
+      fileData[index].breakCron = breakData.cron;
+      fileData[index].isShort = breakData.isShort;
+      fileData[index].message = breakData.message;
+    });
+    this.data = fileData;
   }
 
   parseDataFile(filePath, defaults) {
@@ -64,13 +77,6 @@ class Store {
       this.set(defaults);
       console.log('Caught error:', error);
     }
-    fileData.forEach((element, index) => {
-      fileData[index].workCron = createCron(element.workTime).cron;
-      const breakData = createCron(element.breakTime);
-      fileData[index].breakCron = breakData.cron;
-      fileData[index].isShort = breakData.isShort;
-      fileData[index].message = breakData.message;
-    });
 
     return fileData;
   }
@@ -80,7 +86,7 @@ class Store {
   }
 
   set(value) {
-    this.data = value;
+    this.createCronForFileData(value);
     fs.writeFileSync(this.path, JSON.stringify(this.data));
   }
 }
