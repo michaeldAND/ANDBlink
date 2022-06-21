@@ -2,7 +2,9 @@ const {
   app, BrowserWindow, Notification, powerMonitor,
 } = require('electron');
 const schedule = require('node-schedule');
+
 const content = require('./data');
+const Store = require('./store');
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -13,6 +15,10 @@ const createWindow = () => {
 
   win.loadFile('index.html');
 };
+
+const contentStore = new Store();
+
+console.log(contentStore.get());
 
 const relaxTimes = ['*/3 * * * * *', '*/1 * * * * *'];
 
