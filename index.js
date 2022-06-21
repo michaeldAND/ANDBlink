@@ -17,19 +17,47 @@ const createWindow = () => {
 };
 
 const contentStore = new Store();
-
-console.log(contentStore.get());
-
-const relaxTimes = ['*/3 * * * * *', '*/1 * * * * *'];
+const userSettings = contentStore.get();
+const tasks = new Array(userSettings.length);
 
 function createNotification(title, body) {
   const breakNotification = new Notification({ title, body });
   breakNotification.show();
 }
 
-function restartJob(job, isWork) {
-  const timer = relaxTimes[isWork ? 0 : 1];
-  job.reschedule(timer);
+function scheduleJobs() {
+  userSettings.forEach((setting, index) => {
+    if (!setting.active) {
+      return;
+    }
+    tasks[index] = { isWork: true, workCron: setting.workCron, breakCron: setting.breakCron };
+    console.log('creating scheduled job', index);
+    const job = schedule.scheduleJob(setting.workCron, () => {
+      if (!tasks[index].isWork) {
+        console.log('notify to take break: ', new Date());
+        let contentArray = setting.isShort ? content.short : content.long;
+        const index = getRandomInt(contentArray.length);
+        let title = contentArray[index].title;
+        title = title.replace('%REPLACE%', setting.message);
+        createNotification(title, contentArray[index].body);
+      }
+      tasks[index].isWork = !tasks[index].isWork;
+      job.reschedule(tasks[index].isWork ? setting.workCron : setting.breakCron)
+    });
+    tasks[index].job = job;
+    console.log('done adding job', index);
+  });
+}
+
+function cancelJobs() {
+  tasks.forEach(task => task.job.cancel());
+}
+
+function restartJobs() {
+  tasks.forEach((task, index) => { 
+    task.job.reschedule(task.workCron);
+    tasks[index].isWork = true;
+  });
 }
 
 function getRandomInt(max) {
@@ -44,42 +72,26 @@ function getRandomInt(max) {
 
 app.whenReady().then(() => {
   createWindow();
-  let isWork = true;
-  const timer = relaxTimes[isWork ? 0 : 1];
-  const job = schedule.scheduleJob(timer, () => {
-    if (!isWork) {
-      console.log('notify to take break: ', new Date());
-      let contentArray = [];
-      if (relaxTimes[1].indexOf('/') <= 2) {
-        contentArray = content.short;
-      } else {
-        contentArray = content.long;
-      }
-      const index = getRandomInt(contentArray.length);
-      createNotification(contentArray[index].title, contentArray[index].body);
-    }
-    isWork = !isWork;
-    restartJob(job, isWork);
-  });
+  scheduleJobs();
 
   powerMonitor.on('suspend', () => {
     console.log('suspended');
-    job.cancel();
+    cancelJobs();
   });
 
   powerMonitor.on('resume', () => {
     console.log('resume');
-    restartJob(job, true);
+    restartJobs();
   });
 
   powerMonitor.on('lock-screen', () => {
     console.log('locked');
-    job.cancel();
+    cancelJobs();
   });
 
   powerMonitor.on('unlock-screen', () => {
     console.log('unlocked');
-    restartJob(job, true);
+    restartJobs();
   });
 
   app.on('activate', () => {
