@@ -2,17 +2,29 @@
   "name": "andblink",
   "description": "To relax your eyes",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "electron-starter.js",
   "dependencies": {
     "electron": "^19.0.4",
     "electron-packager": "^15.5.1",
     "node-schedule": "^2.1.0",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "electron .",
     "start:nodemon": "nodemon --watch index.js --exec npm start",
-    "build": "electron-packager . andblink --icon ./Logo.icns"
+    "build": "electron-packager . andblink --icon ./Logo.icns",
+    "start-react": "react-scripts start",
+    "build-react": "react-scripts build",
+    "test-react": "react-scripts test",
+    "eject-react": "react-scripts eject",
+    "lint-fix": "eslint --fix ." 
   },
   "repository": {
     "type": "git",
@@ -33,5 +45,17 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.6.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

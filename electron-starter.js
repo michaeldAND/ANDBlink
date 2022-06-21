@@ -11,6 +11,8 @@ const createWindow = () => {
     icon: './Logo.icns',
   });
 
+  win.loadURL('http://localhost:3000');
+  win.webContents.openDevTools();
   win.loadFile('index.html');
 };
 
