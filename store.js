@@ -47,12 +47,7 @@ class Store {
   constructor() {
     const userDataPath = app.getPath('userData');
     this.path = path.join(userDataPath, 'settings.json');
-    const defaults = [
-      { workTime: 3000, breakTime: 600, active: false },
-      { workTime: 1200, breakTime: 20, active: true },
-      { workTime: 7, breakTime: 3, active: true },
-    ];
-    const retrievedData = this.parseDataFile(this.path, defaults);
+    const retrievedData = this.parseDataFile(this.path);
     this.createCronForFileData(retrievedData);
   }
 
@@ -68,13 +63,13 @@ class Store {
     this.data = fileData;
   }
 
-  parseDataFile(filePath, defaults) {
-    let fileData = defaults;
+  parseDataFile(filePath) {
+    let fileData;
     try {
       fileData = JSON.parse(safeStorage.decryptString(fs.readFileSync(filePath)));
     } catch (error) {
       // if there was some kind of error, resets file to default.
-      this.set(defaults);
+      this.resetToDefault();
       console.log('Caught error:', error);
     }
 
@@ -88,6 +83,15 @@ class Store {
   set(value) {
     this.createCronForFileData(value);
     fs.writeFileSync(this.path, safeStorage.encryptString(JSON.stringify(this.data)));
+  }
+
+  resetToDefault() {
+    const defaults = [
+      { workTime: 3000, breakTime: 600, active: false },
+      { workTime: 1200, breakTime: 20, active: true },
+      { workTime: 7, breakTime: 3, active: true },
+    ];
+    this.set(defaults);
   }
 }
 
