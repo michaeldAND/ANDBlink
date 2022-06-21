@@ -16,11 +16,22 @@ const createWindow = () => {
   win.loadURL('http://localhost:3000');
   win.webContents.openDevTools();
 };
-
-// create the content store and request data, from file or from defaults
 const contentStore = new Store();
-const userSettings = contentStore.get();
-const tasks = new Array(userSettings.length);
+let userSettings;
+let tasks = [];
+
+// cancels all active jobs
+function cancelJobs() {
+  tasks.forEach((task) => task.job.cancel());
+}
+
+// restarts all cancelled job, as the user just took their break
+function restartJobs() {
+  tasks.forEach((task, index) => {
+    task.job.reschedule(task.workCron);
+    tasks[index].isWork = true;
+  });
+}
 
 function createNotification(title, body) {
   const notification = new Notification({ title, body });
@@ -58,22 +69,18 @@ function scheduleJobs() {
   });
 }
 
-// cancels all active jobs
-function cancelJobs() {
-  tasks.forEach((task) => task.job.cancel());
-}
-
-// restarts all cancelled job, as the user just took their break
-function restartJobs() {
-  tasks.forEach((task, index) => {
-    task.job.reschedule(task.workCron);
-    tasks[index].isWork = true;
-  });
+// gets the content stored from file or from defaults
+// cancels all active jobs and starts new ones when called
+function refreshNotifications() {
+  cancelJobs();
+  userSettings = contentStore.get();
+  tasks = new Array(userSettings.length);
+  scheduleJobs();
 }
 
 app.whenReady().then(() => {
   createWindow();
-  scheduleJobs();
+  refreshNotifications();
 
   powerMonitor.on('suspend', () => {
     console.log('suspended');
