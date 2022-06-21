@@ -27,6 +27,11 @@ function createNotification(title, body) {
   notification.show();
 }
 
+function getRandomInt(max) {
+  const index = Math.floor(Math.random() * max);
+  return Math.min(index, max - 1);
+}
+
 function scheduleJobs() {
   userSettings.forEach((setting, index) => {
     if (!setting.active) {
@@ -38,16 +43,16 @@ function scheduleJobs() {
       if (!tasks[index].isWork) {
         console.log('notify to take break', new Date());
         // depending on the break size, show different messages
-        let contentArray = setting.isShort ? content.short : content.long;
+        const contentArray = setting.isShort ? content.short : content.long;
         const random = getRandomInt(contentArray.length);
         // replace title string with appropriate break time period
-        let title = contentArray[random].title;
+        let { title } = contentArray[random];
         title = title.replace('%REPLACE%', setting.message);
         createNotification(title, contentArray[random].body);
       }
       // assign the rescheduling of the job to always alternate between work and break
       tasks[index].isWork = !tasks[index].isWork;
-      job.reschedule(tasks[index].isWork ? setting.workCron : setting.breakCron)
+      job.reschedule(tasks[index].isWork ? setting.workCron : setting.breakCron);
     });
     tasks[index].job = job;
   });
@@ -55,20 +60,15 @@ function scheduleJobs() {
 
 // cancels all active jobs
 function cancelJobs() {
-  tasks.forEach(task => task.job.cancel());
+  tasks.forEach((task) => task.job.cancel());
 }
 
 // restarts all cancelled job, as the user just took their break
 function restartJobs() {
-  tasks.forEach((task, index) => { 
+  tasks.forEach((task, index) => {
     task.job.reschedule(task.workCron);
     tasks[index].isWork = true;
   });
-}
-
-function getRandomInt(max) {
-  const index = Math.floor(Math.random() * max);
-  return Math.min(index, max - 1);
 }
 
 app.whenReady().then(() => {
