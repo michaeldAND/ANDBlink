@@ -104,3 +104,5 @@ dist
 .tern-p
 andblink-*/
 .DS_Store
+
+.build/
