@@ -2,6 +2,7 @@ const {
   app, BrowserWindow, Notification, powerMonitor, ipcMain,
 } = require('electron');
 const schedule = require('node-schedule');
+const path = require('path');
 
 const content = require('./data');
 const Store = require('./store');
@@ -11,6 +12,9 @@ const createWindow = () => {
     width: 800,
     height: 600,
     icon: './Logo.icns',
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+    },
   });
   const isDev = true;
 
@@ -79,7 +83,7 @@ app.whenReady().then(() => {
   createWindow();
   scheduleJobs();
 
-  ipcMain.on('yolo', (event, arg) => {
+  ipcMain.on('do-a-thing', (event, arg) => {
     console.log('heyyyy', arg, event); // prints "heyyyy ping"
   });
 
