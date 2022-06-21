@@ -1,5 +1,5 @@
 const {
-  app,
+  app, safeStorage,
 } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -71,7 +71,7 @@ class Store {
   parseDataFile(filePath, defaults) {
     let fileData = defaults;
     try {
-      fileData = JSON.parse(fs.readFileSync(filePath));
+      fileData = JSON.parse(safeStorage.decryptString(fs.readFileSync(filePath)));
     } catch (error) {
       // if there was some kind of error, resets file to default.
       this.set(defaults);
@@ -87,7 +87,7 @@ class Store {
 
   set(value) {
     this.createCronForFileData(value);
-    fs.writeFileSync(this.path, JSON.stringify(this.data));
+    fs.writeFileSync(this.path, safeStorage.encryptString(JSON.stringify(this.data)));
   }
 }
 
