@@ -4,7 +4,6 @@ import './App.css';
 import {
   Checkbox, Icon, Menu, Segment,
 } from 'semantic-ui-react';
-// eslint-disable-next-line no-unused-vars
 
 function App() {
   const [scheduleBreaks, setScheduleBreaks] = useState(false);
@@ -50,12 +49,14 @@ function App() {
         id="reduceEyeStrain"
         toggle
         checked={eyeStrainBreaks}
+        // TODO: Change to use pop up
         onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
         label="Reduce eye strain"
       />
       <Icon
         name="info circle"
         className="float-right"
+        // TODO: Change to use pop up
         onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
       />
     </Segment>
@@ -64,25 +65,6 @@ function App() {
   };
   return (
     <>
-      {/* <Segment>
-              <Checkbox
-                toggle
-                checked={scheduleBreaks}
-                onClick={() => setScheduleBreaks(!scheduleBreaks)}
-              >
-                Toggle
-              </Checkbox>
-            </Segment>
-
-            <Segment>
-              <Checkbox
-                toggle
-                checked={scheduleBreaks}
-                onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
-              >
-                Toggle
-              </Checkbox>
-            </Segment> */}
 
       <div>
         <Menu attached="top" tabular>
