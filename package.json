@@ -20,9 +20,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start:nodemon": "nodemon --watch main.js --exec npm run start-electron",
+    "start:nodemon": "NODE_ENV=DEVELOPMENT nodemon --watch main.js --exec npm run start-electron",
     "build": "electron-packager . andblink --icon ./Logo.icns",
-    "start-electron": "electron .",
+    "start-electron": "NODE_ENV=DEVELOPMENT electron .",
     "start-react": "react-scripts start",
     "build-react": "react-scripts build",
     "test-react": "react-scripts test",
