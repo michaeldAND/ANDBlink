@@ -1,3 +1,4 @@
+const { MongoClient } = require('mongodb');
 const {
   app, safeStorage,
 } = require('electron');
@@ -47,8 +48,8 @@ class Store {
   constructor() {
     const userDataPath = app.getPath('userData');
     this.path = path.join(userDataPath, 'settings.json');
-    const retrievedData = this.parseDataFile(this.path);
-    this.createCronForFileData(retrievedData);
+    // const retrievedData = this.parseDataFile(this.path);
+    // this.createCronForFileData(retrievedData);
   }
 
   createCronForFileData(retrievedData) {
@@ -83,6 +84,17 @@ class Store {
   set(value) {
     this.createCronForFileData(value);
     fs.writeFileSync(this.path, safeStorage.encryptString(JSON.stringify(this.data)));
+  }
+
+  async fetch() {
+    const client = await MongoClient.connect('mongodb://localhost:27017');
+
+    const db = client.db('andBlink');
+    const settingsCollection = db.collection('settings');
+    const settings = await settingsCollection.find({}).toArray();
+
+    console.log('RESULT', settings);
+    this.createCronForFileData(settings);
   }
 
   resetToDefault() {

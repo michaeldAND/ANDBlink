@@ -7,6 +7,10 @@ const path = require('path');
 const content = require('./data');
 const Store = require('./store');
 
+const contentStore = new Store();
+let userSettings;
+let tasks = [];
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
@@ -24,9 +28,6 @@ const createWindow = () => {
 
   win.webContents.openDevTools();
 };
-const contentStore = new Store();
-let userSettings;
-let tasks = [];
 
 // cancels all active jobs
 function cancelJobs() {
@@ -79,16 +80,18 @@ function scheduleJobs() {
 
 // gets the content stored from file or from defaults
 // cancels all active jobs and starts new ones when called
-function refreshNotifications() {
+async function refreshNotifications() {
   cancelJobs();
+  await contentStore.fetch();
   userSettings = contentStore.get();
+  console.log('USER', userSettings);
   tasks = new Array(userSettings.length);
   scheduleJobs();
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   createWindow();
-  refreshNotifications();
+  await refreshNotifications();
 
   ipcMain.on('send-settings', (event, arg) => {
     contentStore.set(arg);
