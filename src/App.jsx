@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Checkbox } from 'semantic-ui-react';
+import './App.css';
+import {
+  Checkbox, Icon, Menu, Segment,
+} from 'semantic-ui-react';
 // eslint-disable-next-line no-unused-vars
 
 function App() {
   const [scheduleBreaks, setScheduleBreaks] = useState(false);
   const [eyeStrainBreaks, setEyeStrainBreaks] = useState(false);
+  const [activeItem, setActiveItem] = useState('Manage your screen time');
 
   useEffect(() => {
     window.electron.handshake();
@@ -23,18 +27,81 @@ function App() {
       { workTime: 4000, breakTime: 400, active: eyeStrainBreaks }]);
   }, [scheduleBreaks, eyeStrainBreaks]);
 
-  return (
-    <>
-      <Checkbox toggle checked={scheduleBreaks} onClick={() => setScheduleBreaks(!scheduleBreaks)}>
-        Toggle
-      </Checkbox>
+  const VIEWS = {
+    'Manage your screen time':
+  <Segment>
+    ANDBlink can help you create healthier screen time habits by using our 2 features:
+    <Segment clearing>
       <Checkbox
+        id="scheduleBreaks"
+        toggle
+        checked={scheduleBreaks}
+        onClick={() => setScheduleBreaks(!scheduleBreaks)}
+        label="Schedule breaks"
+      />
+      <Icon
+        name="info circle"
+        className="float-right"
+      />
+
+    </Segment>
+    <Segment clearing>
+      <Checkbox
+        id="reduceEyeStrain"
         toggle
         checked={eyeStrainBreaks}
         onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
-      >
-        Toggle
-      </Checkbox>
+        label="Reduce eye strain"
+      />
+      <Icon
+        name="info circle"
+        className="float-right"
+        onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
+      />
+    </Segment>
+  </Segment>,
+    'Daily check-in': <Segment>number 2</Segment>,
+  };
+  return (
+    <>
+      {/* <Segment>
+              <Checkbox
+                toggle
+                checked={scheduleBreaks}
+                onClick={() => setScheduleBreaks(!scheduleBreaks)}
+              >
+                Toggle
+              </Checkbox>
+            </Segment>
+
+            <Segment>
+              <Checkbox
+                toggle
+                checked={scheduleBreaks}
+                onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
+              >
+                Toggle
+              </Checkbox>
+            </Segment> */}
+
+      <div>
+        <Menu attached="top" tabular>
+          <Menu.Item
+            name="Manage your screen time"
+            active={activeItem === 'Manage your screen time'}
+            onClick={(e, { name }) => setActiveItem(name)}
+          />
+          <Menu.Item
+            name="Daily check-in"
+            active={activeItem === 'Daily check-in'}
+            onClick={(e, { name }) => setActiveItem(name)}
+          />
+
+        </Menu>
+
+      </div>
+
+      {VIEWS[activeItem]}
     </>
   );
 }
