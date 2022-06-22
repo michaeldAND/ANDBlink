@@ -21,6 +21,12 @@ const createWindow = () => {
   win.webContents.openDevTools();
 };
 
+// updates ONE setting
+async function updateSetting(newSetting) {
+  await contentStore.update(newSetting);
+  contentStore.get();
+}
+
 // cancels all active jobs
 function cancelJobs() {
   tasks.forEach((task) => task.job.cancel());
@@ -76,7 +82,6 @@ async function refreshNotifications() {
   cancelJobs();
   await contentStore.fetch();
   userSettings = contentStore.get();
-  console.log('USER', userSettings);
   tasks = new Array(userSettings.length);
   scheduleJobs();
 }
