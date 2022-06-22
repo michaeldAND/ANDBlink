@@ -3,9 +3,14 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld(
   'electron',
   {
-    sendSettings: (workTime, breakTime, active) => {
-      console.log('settings values in preload.js: ', workTime, breakTime, active);
-      ipcRenderer.send('send-settings', { workTime, breakTime, active });
+    sendSettings: (settings) => {
+      ipcRenderer.send('send-settings', settings);
+    },
+    recieveSettings: (callback) => {
+      ipcRenderer.on('recieve-settings', (event, settings) => callback(settings));
+    },
+    handshake: () => {
+      ipcRenderer.send('handshake');
     },
   },
 );
