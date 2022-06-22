@@ -22,8 +22,8 @@ function App() {
 
   useEffect(() => {
     // construct the array
-    window.electron.sendSettings([{ workTime: 3000, breakTime: 600, active: scheduleBreaks },
-      { workTime: 4000, breakTime: 400, active: eyeStrainBreaks }]);
+    window.electron.sendSettings([{ workTime: 1000, breakTime: 50, active: scheduleBreaks },
+      { workTime: 500, breakTime: 20, active: eyeStrainBreaks }]);
   }, [scheduleBreaks, eyeStrainBreaks]);
 
   const VIEWS = {
@@ -39,7 +39,7 @@ function App() {
         label="Schedule breaks"
       />
       <Icon
-        name="info circle"
+        name="cog"
         className="float-right"
       />
 
@@ -54,7 +54,7 @@ function App() {
         label="Reduce eye strain"
       />
       <Icon
-        name="info circle"
+        name="cog"
         className="float-right"
         // TODO: Change to use pop up
         onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
