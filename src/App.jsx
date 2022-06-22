@@ -8,11 +8,7 @@ function App() {
   const [eyeStrainBreaks, setEyeStrainBreaks] = useState(false);
 
   useEffect(() => {
-    console.log('schedule break', scheduleBreaks);
-    console.log('eye strains break', eyeStrainBreaks);
-
-    // ipcRenderer.send('yolo', JSON.stringify({ scheduleBreaks, eyeStrainBreaks }));
-    window.electron.doThing();
+    window.electron.sendSettings(3000, 600, true);
   }, [scheduleBreaks, eyeStrainBreaks]);
 
   return (

@@ -90,8 +90,11 @@ app.whenReady().then(() => {
   createWindow();
   refreshNotifications();
 
-  ipcMain.on('do-a-thing', (event, arg) => {
-    console.log('heyyyy', arg, event); // prints "heyyyy ping"
+  ipcMain.on('send-settings', (event, arg) => {
+    // console.log('heyyyy', arg, event); // prints "heyyyy ping"
+    console.log('IN MAIN.JS');
+    console.log(arg);
+    contentStore.set(arg);
   });
 
   powerMonitor.on('suspend', () => {
