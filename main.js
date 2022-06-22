@@ -16,11 +16,11 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-  const isDev = true;
+  const isDev = process.env.NODE_ENV === 'DEVELOPMENT';
 
   win.loadURL(isDev
     ? 'http://localhost:3000'
-    : `file://${path.join(__dirname, '../build/index.html')}`);
+    : `file://${path.join(__dirname, './build/index.html')}`);
 
   win.webContents.openDevTools();
 };
