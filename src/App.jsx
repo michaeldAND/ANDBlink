@@ -13,7 +13,11 @@ function App() {
     breakTime: 50,
     active: false,
   });
-  const [eyeStrainBreaks, setEyeStrainBreaks] = useState(false);
+  const [eyeStrainBreaks, setEyeStrainBreaks] = useState({
+    workTime: 1200,
+    breakTime: 20,
+    active: false,
+  });
   const [activeItem, setActiveItem] = useState('Manage your screen time');
   const [openScheduleBreaks, setOpenScheduleBreaks] = useState(false);
   const [openEyeStrainBreaks, setOpenEyeStrainBreaks] = useState(false);
@@ -34,13 +38,21 @@ function App() {
 
       }));
 
-      setEyeStrainBreaks(settings[1].active);
+      setEyeStrainBreaks((prev) => ({
+        ...prev,
+
+        workTime: settings[1].workTime,
+        breakTime: settings[1].breakTime,
+        active: settings[1].active,
+      }));
     });
   }, []);
 
   useEffect(() => {
     // construct the array]
     console.log('yolo', scheduleBreaks);
+    console.log('yolo 2', eyeStrainBreaks);
+
     window.electron.sendSettings([scheduleBreaks,
       { workTime: 500, breakTime: 20, active: eyeStrainBreaks }]);
   }, [scheduleBreaks, eyeStrainBreaks]);
@@ -78,7 +90,13 @@ function App() {
             Get away from the laptop, move around or standup.
             Schedule a break every
             {' '}
-            <Input type="number" />
+            <Input
+              type="number"
+              onChange={(event) => setScheduleBreaks((prev) => ({
+                ...prev,
+                workTime: event.target.value,
+              }))}
+            />
             {' '}
             minutes
 
@@ -97,8 +115,13 @@ function App() {
             <Checkbox
               id="reduceEyeStrain"
               toggle
-              checked={eyeStrainBreaks}
-              onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
+              checked={eyeStrainBreaks.active}
+              onClick={() => setEyeStrainBreaks((prev) => ({
+                ...prev,
+
+                active: !prev.active,
+
+              }))}
               label="Reduce eye strain"
             />
             <Icon
