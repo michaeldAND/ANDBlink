@@ -2,27 +2,46 @@ import React, { useState, useEffect } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import {
-  Checkbox, Icon, Menu, Segment,
+  Accordion,
+  Checkbox, Grid, GridColumn, Icon, Input, Menu, Segment,
 } from 'semantic-ui-react';
+import Spacing from './Spacing';
 
 function App() {
-  const [scheduleBreaks, setScheduleBreaks] = useState(false);
+  const [scheduleBreaks, setScheduleBreaks] = useState({
+    workTime: 1000,
+    breakTime: 50,
+    active: false,
+  });
   const [eyeStrainBreaks, setEyeStrainBreaks] = useState(false);
   const [activeItem, setActiveItem] = useState('Manage your screen time');
+  const [openScheduleBreaks, setOpenScheduleBreaks] = useState(false);
+  const [openEyeStrainBreaks, setOpenEyeStrainBreaks] = useState(false);
 
   useEffect(() => {
     window.electron.handshake();
     window.electron.recieveSettings((settings) => {
       // TODO: Investigate call occurence
-      console.log(settings);
-      setScheduleBreaks(settings[0].active);
+      console.log('SETTINGS', settings);
+      setOpenScheduleBreaks(settings[0].active);
+      setOpenEyeStrainBreaks(settings[1].active);
+      setScheduleBreaks((prev) => ({
+        ...prev,
+
+        workTime: settings[0].workTime,
+        breakTime: settings[0].breakTime,
+        active: settings[0].active,
+
+      }));
+
       setEyeStrainBreaks(settings[1].active);
     });
   }, []);
 
   useEffect(() => {
-    // construct the array
-    window.electron.sendSettings([{ workTime: 1000, breakTime: 50, active: scheduleBreaks },
+    // construct the array]
+    console.log('yolo', scheduleBreaks);
+    window.electron.sendSettings([scheduleBreaks,
       { workTime: 500, breakTime: 20, active: eyeStrainBreaks }]);
   }, [scheduleBreaks, eyeStrainBreaks]);
 
@@ -30,36 +49,68 @@ function App() {
     'Manage your screen time':
   <Segment>
     ANDBlink can help you create healthier screen time habits by using our 2 features:
-    <Segment clearing>
-      <Checkbox
-        id="scheduleBreaks"
-        toggle
-        checked={scheduleBreaks}
-        onClick={() => setScheduleBreaks(!scheduleBreaks)}
-        label="Schedule breaks"
-      />
-      <Icon
-        name="cog"
-        className="float-right"
-      />
+    <Spacing />
 
-    </Segment>
-    <Segment clearing>
-      <Checkbox
-        id="reduceEyeStrain"
-        toggle
-        checked={eyeStrainBreaks}
-        // TODO: Change to use pop up
-        onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
-        label="Reduce eye strain"
-      />
-      <Icon
-        name="cog"
-        className="float-right"
-        // TODO: Change to use pop up
-        onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
-      />
-    </Segment>
+    <Grid padded="vertically">
+      <GridColumn width={8}>
+        <Accordion fluid styled padded="vertically">
+          <Accordion.Title active={openScheduleBreaks}>
+            <Checkbox
+              id="scheduleBreaks"
+              toggle
+              checked={scheduleBreaks.active}
+              onClick={() => setScheduleBreaks((prev) => ({
+                ...prev,
+
+                active: !prev.active,
+
+              }))}
+              label="Schedule breaks"
+            />
+            <Icon
+              name="cog"
+              className="float-right"
+              onClick={() => setOpenScheduleBreaks(!openScheduleBreaks)}
+            />
+          </Accordion.Title>
+          <Accordion.Content active={openScheduleBreaks}>
+            Schedule breaks throughout the day to rest.
+            Get away from the laptop, move around or standup.
+            Schedule a break every
+            {' '}
+            <Input type="number" />
+            {' '}
+            minutes
+
+            <Spacing />
+            The break should last
+            {' '}
+            <Input type="number" />
+            {' '}
+            minutes
+
+          </Accordion.Content>
+        </Accordion>
+        <Spacing />
+        <Accordion fluid styled padded="vertically">
+          <Accordion.Title active={openEyeStrainBreaks}>
+            <Checkbox
+              id="reduceEyeStrain"
+              toggle
+              checked={eyeStrainBreaks}
+              onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
+              label="Reduce eye strain"
+            />
+            <Icon
+              name="cog"
+              className="float-right"
+              onClick={() => setOpenEyeStrainBreaks(!openEyeStrainBreaks)}
+            />
+          </Accordion.Title>
+          <Accordion.Content active={openEyeStrainBreaks}>content</Accordion.Content>
+        </Accordion>
+      </GridColumn>
+    </Grid>
   </Segment>,
     'Daily check-in': <Segment>number 2</Segment>,
   };
@@ -83,7 +134,11 @@ function App() {
 
       </div>
 
-      {VIEWS[activeItem]}
+      <Grid padded="horizontally vertically" verticalAlign="center">
+        <GridColumn width={10} textAlign="left">
+          {VIEWS[activeItem]}
+        </GridColumn>
+      </Grid>
     </>
   );
 }
