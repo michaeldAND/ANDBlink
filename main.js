@@ -91,10 +91,11 @@ app.whenReady().then(() => {
   refreshNotifications();
 
   ipcMain.on('send-settings', (event, arg) => {
-    // console.log('heyyyy', arg, event); // prints "heyyyy ping"
-    console.log('IN MAIN.JS');
-    console.log(arg);
     contentStore.set(arg);
+  });
+
+  ipcMain.on('handshake', (event) => {
+    event.sender.send('recieve-settings', userSettings);
   });
 
   powerMonitor.on('suspend', () => {

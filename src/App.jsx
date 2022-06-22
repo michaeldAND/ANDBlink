@@ -8,15 +8,31 @@ function App() {
   const [eyeStrainBreaks, setEyeStrainBreaks] = useState(false);
 
   useEffect(() => {
-    window.electron.sendSettings(3000, 600, true);
+    window.electron.handshake();
+    window.electron.recieveSettings((settings) => {
+      // TODO: Investigate call occurence
+      console.log(settings);
+      setScheduleBreaks(settings[0].active);
+      setEyeStrainBreaks(settings[1].active);
+    });
+  }, []);
+
+  useEffect(() => {
+    // construct the array
+    window.electron.sendSettings([{ workTime: 3000, breakTime: 600, active: scheduleBreaks },
+      { workTime: 4000, breakTime: 400, active: eyeStrainBreaks }]);
   }, [scheduleBreaks, eyeStrainBreaks]);
 
   return (
     <>
-      <Checkbox toggle onClick={() => setScheduleBreaks(!scheduleBreaks)}>
+      <Checkbox toggle checked={scheduleBreaks} onClick={() => setScheduleBreaks(!scheduleBreaks)}>
         Toggle
       </Checkbox>
-      <Checkbox toggle onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}>
+      <Checkbox
+        toggle
+        checked={eyeStrainBreaks}
+        onClick={() => setEyeStrainBreaks(!eyeStrainBreaks)}
+      >
         Toggle
       </Checkbox>
     </>
