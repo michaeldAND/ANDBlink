@@ -99,7 +99,7 @@ app.whenReady().then(async () => {
   await refreshNotifications();
 
   ipcMain.on('send-settings', (event, arg) => {
-    contentStore.set(arg);
+    contentStore.updateMany(arg);
   });
 
   ipcMain.on('handshake', (event) => {
