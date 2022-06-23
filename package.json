@@ -3,6 +3,7 @@
   "description": "To relax your eyes",
   "version": "1.0.0",
   "main": "main.js",
+  "homepage": ".",
   "dependencies": {
     "@semantic-ui-react/css-patch": "^1.0.0",
     "@testing-library/jest-dom": "^5.16.4",
@@ -26,7 +27,6 @@
     "start-react": "react-scripts start",
     "build-react": "react-scripts build",
     "test-react": "react-scripts test",
-    "eject-react": "react-scripts eject",
     "lint-fix": "eslint --fix .",
     "postinstall": "semantic-ui-css-patch"
   },
