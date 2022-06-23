@@ -1,10 +1,9 @@
 /* eslint-disable no-underscore-dangle */
-const { MongoClient } = require('mongodb');
 const {
   app,
 } = require('electron');
 const path = require('path');
-const content = require('./data');
+const fs = require('fs');
 
 function createCron(time) {
   const cron = ['*', '*', '*', '*', '*', '*'];
@@ -49,18 +48,33 @@ class Store {
   constructor() {
     const userDataPath = app.getPath('userData');
     this.path = path.join(userDataPath, 'settings.json');
+    const defaults = [
+      { workTime: 3000, breakTime: 600, active: false },
+      { workTime: 1200, breakTime: 20, active: true },
+      { workTime: 7, breakTime: 3, active: true },
+    ];
+    this.parseDataFile(this.path, defaults);
   }
 
-  createCronForData(retrievedData) {
-    const data = [...retrievedData];
-    data.forEach((element, index) => {
-      data[index].workCron = createCron(element.workTime).cron;
+  parseDataFile(filePath, defaults) {
+    try {
+      this.settings = JSON.parse(fs.readFileSync(filePath));
+    } catch (error) {
+      // if there was some kind of error, resets file to default.
+      this.set(defaults);
+      console.log('Caught error:', error);
+    }
+  }
+
+  createCronForData() {
+    this.data = [...this.settings];
+    this.data.forEach((element, index) => {
+      this.data[index].workCron = createCron(element.workTime).cron;
       const breakData = createCron(element.breakTime);
-      data[index].breakCron = breakData.cron;
-      data[index].isShort = breakData.isShort;
-      data[index].message = breakData.message;
+      this.data[index].breakCron = breakData.cron;
+      this.data[index].isShort = breakData.isShort;
+      this.data[index].message = breakData.message;
     });
-    this.data = data;
   }
 
   // adds the CRONS into the RAW data and returns it.
@@ -69,43 +83,9 @@ class Store {
     return this.data;
   }
 
-  // sets up the database connection
-  async setupConnection() {
-    this.client = await MongoClient.connect('mongodb://localhost:27017');
-
-    const db = this.client.db('andBlink');
-    this.settingsCollection = db.collection('settings');
-  }
-
-  // updates the settingsCollection with A new setting.
-  async update(value) {
-    await this.setupConnection();
-    const newValue = { ...value };
-    const id = newValue._id;
-    delete newValue._id;
-
-    await this.settingsCollection.findOneAndUpdate({ _id: id }, { $set: newValue });
-    this.client.close();
-  }
-
-  // updates the settingsCollection with A List of setting
-  async updateMany(values) {
-    await this.setupConnection();
-    await this.settingsCollection.deleteMany({});
-    await this.settingsCollection.insertMany(values);
-    this.client.close();
-  }
-
-  // fetches the RAW data without CRON's
-  async fetch() {
-    await this.setupConnection();
-
-    this.settings = await this.settingsCollection.find({}).toArray();
-    this.client.close();
-  }
-
-  async resetToDefault() {
-    await this.updateMany(content.defaultSettings);
+  set(value) {
+    this.settings = value;
+    fs.writeFileSync(this.path, JSON.stringify(value));
   }
 }
 
