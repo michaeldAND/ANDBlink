@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import {
-  Checkbox, GridColumn, Grid, Icon, Menu, Segment, Image, Container, Accordion, Input,
+  Checkbox, GridColumn, Grid, Icon, Menu, Segment, Image, Container, Accordion, Input, Button,
 } from 'semantic-ui-react';
 import happyFace from './happy_face.png';
 import neutralFace from './neutral_face.png';
