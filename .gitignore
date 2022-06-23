@@ -103,6 +103,7 @@ dist
 # TernJS port file
 .tern-p
 andblink-*/
+ANDBlink-*/
 .DS_Store
 
 build/

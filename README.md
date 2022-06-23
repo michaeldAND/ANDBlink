@@ -5,7 +5,9 @@ The user will have two break patterns to choose from:
 - A schedule breaks pattern where they can pick a work time and break time in minutes 
 - A eye strain break pattern that gives a 20 second break after a user defined interval.
 
-The app will have default rules for these breaks the fifty ten rule and the twenty twenty rule.
+The app will have default rules for these breaks the [50-10 rule](https://www.hse.gov.uk/msd/dse/work-routine.htm#:~:text=Take%20short%20breaks%20often%2C%20rather,meetings%20or%20making%20phone%20calls) and the [20-20-20 rule](https://www.sbs.nhs.uk/article/16681/Working-from-home-and-looking-after-your-eyes#:~:text=To%20combat%20this%2C%20we%20would,for%20at%20least%2020%20seconds).
+
+[Further reading](https://www.unison.org.uk/get-help/knowledge/health-and-safety/computers/)
 
 ## To run locally:
 
