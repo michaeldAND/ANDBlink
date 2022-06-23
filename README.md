@@ -8,9 +8,12 @@ The user will have two break patterns to choose from:
 The app will have default rules for these breaks the fifty ten rule and the twenty twenty rule.
 
 ## To run locally:
+```
 npm install
+```
 
 You will need to have Mongodb running locally see [MongoDB docs](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/) for more information.
+```
 brew install mongodb-community@5.0
 
 npm run seeds
@@ -18,13 +21,16 @@ npm run seeds
 npm run start-react
 
 npm run start:nodemon
+```
 
 Allow notifications in settings from electron.
 ![Settings for Electron](/assets/settingsElectron.png)
 
 
 ## To build:
+```
 npm run build
+```
 
 Allow notifications in settings from ANDBlink.
 ![Settings for ANDBlink](/assets/settingsANDBlink.png)
