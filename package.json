@@ -1,5 +1,5 @@
 {
-  "name": "andblink",
+  "name": "ANDBlink",
   "description": "To relax your eyes",
   "version": "1.0.0",
   "main": "main.js",
@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start:nodemon": "NODE_ENV=DEVELOPMENT nodemon --watch main.js --exec npm run start-electron",
-    "build": "npm run build-react && electron-packager . andblink --icon ./Logo.icns",
+    "build": "npm run build-react && electron-packager . ANDBlink --icon ./Logo.icns",
     "start-electron": "NODE_ENV=DEVELOPMENT electron .",
     "start-react": "react-scripts start",
     "build-react": "react-scripts build",
