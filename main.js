@@ -29,12 +29,6 @@ const createWindow = () => {
   if (isDev) win.webContents.openDevTools();
 };
 
-// updates ONE setting
-async function updateSetting(newSetting) {
-  await contentStore.update(newSetting);
-  contentStore.get();
-}
-
 // cancels all active jobs
 function cancelJobs() {
   tasks.forEach((task) => task.job.cancel());
@@ -86,20 +80,20 @@ function scheduleJobs() {
 
 // gets the content stored from file or from defaults
 // cancels all active jobs and starts new ones when called
-async function refreshNotifications() {
+function refreshNotifications() {
   cancelJobs();
-  await contentStore.fetch();
   userSettings = contentStore.get();
   tasks = new Array(userSettings.length);
   scheduleJobs();
 }
 
-app.whenReady().then(async () => {
+app.whenReady().then(() => {
   createWindow();
-  await refreshNotifications();
+  refreshNotifications();
 
   ipcMain.on('send-settings', (event, arg) => {
-    contentStore.updateMany(arg);
+    contentStore.set(arg);
+    refreshNotifications();
   });
 
   ipcMain.on('handshake', (event) => {
