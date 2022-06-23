@@ -26,7 +26,7 @@ const createWindow = () => {
     ? 'http://localhost:3000'
     : `file://${path.join(__dirname, './build/index.html')}`);
 
-  win.webContents.openDevTools();
+  if (isDev) win.webContents.openDevTools();
 };
 
 // updates ONE setting
