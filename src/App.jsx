@@ -7,6 +7,7 @@ import {
 import happyFace from './happy_face.png';
 import neutralFace from './neutral_face.png';
 import sadFace from './sad_face.png';
+import settingsLogo from './settingsLogo.png';
 import Spacing from './Spacing';
 
 function App() {
@@ -127,9 +128,12 @@ function App() {
     <Spacing />
 
     <Grid padded="vertically">
+      <GridColumn width={4}>
+        <Image src={settingsLogo} />
+      </GridColumn>
       <GridColumn width={10}>
         <Accordion fluid styled padded="vertically">
-          <Accordion.Title active={openScheduleBreaks}>
+          <Accordion.Title active={openScheduleBreaks} style={{ cursor: 'default' }}>
             <Checkbox
               id="scheduleBreaks"
               toggle
@@ -156,6 +160,7 @@ function App() {
             Schedule a break every
             {' '}
             <Input
+              style={{ width: '5rem' }}
               type="number"
               value={Math.floor(scheduleBreaks.workTime / 60)}
               min={1}
@@ -171,6 +176,7 @@ function App() {
             The break should last
             {' '}
             <Input
+              style={{ width: '5rem' }}
               type="number"
               min={1}
               value={Math.floor(scheduleBreaks.breakTime / 60)}
@@ -186,7 +192,7 @@ function App() {
         </Accordion>
         <Spacing />
         <Accordion fluid styled padded="vertically">
-          <Accordion.Title active={openEyeStrainBreaks}>
+          <Accordion.Title active={openEyeStrainBreaks} style={{ cursor: 'default' }}>
             <Checkbox
               id="reduceEyeStrain"
               toggle
@@ -206,7 +212,7 @@ function App() {
             />
           </Accordion.Title>
           <Accordion.Content active={openEyeStrainBreaks}>
-            If youre staring at a screen for a long periods of time,
+            If you are staring at a screen for a long periods of time,
             looking away for 20 seconds every 20 minutes can help reduce the strain of your eyes.
 
             <Spacing />
@@ -215,6 +221,7 @@ function App() {
 
             {' '}
             <Input
+              style={{ width: '5rem' }}
               type="number"
               min={1}
               value={Math.floor(eyeStrainBreaks.workTime / 60)}
@@ -227,19 +234,31 @@ function App() {
             minutes
           </Accordion.Content>
         </Accordion>
+        <Spacing />
+        <Button floated="right" nClick={() => window.electron.restoreDefaults()}>Restore settings</Button>
       </GridColumn>
     </Grid>
-    <Button onClick={() => window.electron.restoreDefaults()}>Restore settings</Button>
 
   </Segment>,
     'Daily check-in':
   <Segment>
-    <p>
-      It&apos;s important to check-in daily to understand how you&apos;re feeling
-      and how you can shift your day to suit your needs.
-    </p>
-    <p>How are you feeling today?</p>
     <Grid>
+      <GridColumn width={4}>
+        <Image src={settingsLogo} />
+      </GridColumn>
+      <GridColumn width={12}>
+        <p>
+          It&apos;s important to check-in daily to understand how you&apos;re feeling
+          and how you can shift your day to suit your needs.
+        </p>
+        <p>How are you feeling today?</p>
+      </GridColumn>
+    </Grid>
+
+    <Grid>
+      <GridColumn width={4}>
+        <Spacing />
+      </GridColumn>
       <GridColumn width={2}>
         <Image className="wellbeing-indicator" src={happyFace} onClick={() => setCurrentMood('Happy Face')} />
       </GridColumn>
@@ -250,8 +269,15 @@ function App() {
         <Image className="wellbeing-indicator" src={sadFace} onClick={() => setCurrentMood('Sad Face')} />
       </GridColumn>
     </Grid>
+    <Grid>
+      <GridColumn width={4}>
+        <Spacing />
+      </GridColumn>
+      <GridColumn width={12}>
+        {MOODS[currentMood]}
+      </GridColumn>
+    </Grid>
     <Spacing />
-    {MOODS[currentMood]}
   </Segment>,
 
   };
