@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import {
-  Accordion,
-  Checkbox, Grid, GridColumn, Icon, Input, Menu, Segment,
+  Checkbox, GridColumn, Grid, Icon, Menu, Segment, Image, Container, Accordion, Input,
 } from 'semantic-ui-react';
+import happyFace from './happy_face.png';
+import neutralFace from './neutral_face.png';
+import sadFace from './sad_face.png';
 import Spacing from './Spacing';
 
 function App() {
@@ -24,6 +26,7 @@ function App() {
   const [openScheduleBreaks, setOpenScheduleBreaks] = useState(false);
   const [openEyeStrainBreaks, setOpenEyeStrainBreaks] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentMood, setCurrentMood] = useState();
 
   useEffect(() => {
     window.electron.handshake();
@@ -60,6 +63,63 @@ function App() {
         eyeStrainBreaks]);
     }
   }, [scheduleBreaks, eyeStrainBreaks]);
+
+  const MOODS = {
+    'Happy Face':
+  <Container>
+    You’re feeling good! Keep spirits high by;
+    <ul>
+      <li>
+        Giving yourself regular breaks
+      </li>
+      <li>
+        Taking a daily walk
+      </li>
+      <li>
+        Chatting with friends
+      </li>
+      <li>
+        Get outside
+      </li>
+    </ul>
+  </Container>,
+    'Neutral Face':
+  <Container>
+    If you’re feeling unsure there a few things you can do to help you feel calmer;
+    <ul>
+      <li>
+        Focus on relaxing
+      </li>
+      <li>
+        Get outdoors and take a walk
+      </li>
+      <li>
+        Listen to your favourite playlist
+      </li>
+    </ul>
+  </Container>,
+    'Sad Face':
+  <Container>
+    If you’re feeling down, take some time to yourself to help gather your thoughts;
+    <ul>
+      <li>
+        Take a step back
+      </li>
+      <li>
+        Focus on relaxing
+      </li>
+      <li>
+        Rest and re-charge
+      </li>
+      <li>
+        Reach out for support
+      </li>
+      <li>
+        Access our support tools
+      </li>
+    </ul>
+  </Container>,
+  };
 
   const VIEWS = {
     'Manage your screen time':
@@ -171,7 +231,28 @@ function App() {
       </GridColumn>
     </Grid>
   </Segment>,
-    'Daily check-in': <Segment>number 2</Segment>,
+    'Daily check-in':
+  <Segment>
+    <p>
+      It&apos;s important to check-in daily to understand how you&apos;re feeling
+      and how you can shift your day to suit your needs.
+    </p>
+    <p>How are you feeling today?</p>
+    <Grid>
+      <GridColumn width={2}>
+        <Image className="wellbeing-indicator" src={happyFace} onClick={() => setCurrentMood('Happy Face')} />
+      </GridColumn>
+      <GridColumn width={2}>
+        <Image className="wellbeing-indicator" src={neutralFace} onClick={() => setCurrentMood('Neutral Face')} />
+      </GridColumn>
+      <GridColumn width={2}>
+        <Image className="wellbeing-indicator" src={sadFace} onClick={() => setCurrentMood('Sad Face')} />
+      </GridColumn>
+    </Grid>
+    <Spacing />
+    {MOODS[currentMood]}
+  </Segment>,
+
   };
   return (
     <>
