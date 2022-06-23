@@ -239,14 +239,14 @@ function App() {
     </p>
     <p>How are you feeling today?</p>
     <Grid>
-      <GridColumn>
-        <Image className="wellbeing-indicator" as="button" src={happyFace} size="medium" onClick={() => setCurrentMood('Happy Face')} />
+      <GridColumn width={2}>
+        <Image className="wellbeing-indicator" src={happyFace} onClick={() => setCurrentMood('Happy Face')} />
       </GridColumn>
-      <GridColumn>
-        <Image className="wellbeing-indicator" as="button" src={neutralFace} size="medium" onClick={() => setCurrentMood('Neutral Face')} />
+      <GridColumn width={2}>
+        <Image className="wellbeing-indicator" src={neutralFace} onClick={() => setCurrentMood('Neutral Face')} />
       </GridColumn>
-      <GridColumn>
-        <Image className="wellbeing-indicator" as="button" src={sadFace} size="medium" onClick={() => setCurrentMood('Sad Face')} />
+      <GridColumn width={2}>
+        <Image className="wellbeing-indicator" src={sadFace} onClick={() => setCurrentMood('Sad Face')} />
       </GridColumn>
     </Grid>
     <Spacing />
