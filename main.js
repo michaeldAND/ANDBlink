@@ -79,6 +79,12 @@ app.whenReady().then(() => {
     refreshNotifications();
   });
 
+  ipcMain.on('restore-defaults', (event) => {
+    contentStore.resetToDefaults();
+    userSettings = contentStore.get();
+    event.sender.send('recieve-settings', userSettings);
+  });
+
   ipcMain.on('handshake', (event) => {
     event.sender.send('recieve-settings', userSettings);
   });

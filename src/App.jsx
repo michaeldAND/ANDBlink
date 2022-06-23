@@ -41,7 +41,6 @@ function App() {
         active: settings[0].active,
 
       }));
-
       setEyeStrainBreaks((prev) => ({
         ...prev,
 
@@ -230,6 +229,8 @@ function App() {
         </Accordion>
       </GridColumn>
     </Grid>
+    <Button onClick={() => window.electron.restoreDefaults()}>Restore settings</Button>
+
   </Segment>,
     'Daily check-in':
   <Segment>
