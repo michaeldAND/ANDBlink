@@ -23,7 +23,7 @@ function App() {
   const [activeItem, setActiveItem] = useState('Manage your screen time');
   const [openScheduleBreaks, setOpenScheduleBreaks] = useState(false);
   const [openEyeStrainBreaks, setOpenEyeStrainBreaks] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     window.electron.handshake();
@@ -48,11 +48,11 @@ function App() {
 
       }));
     });
-    setLoading(true);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
-    if (loading) {
+    if (!loading) {
       console.log('scheduleBreaks', scheduleBreaks);
       console.log('eyeStrainbreaks', eyeStrainBreaks);
 
