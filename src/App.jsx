@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import {
-  Checkbox, GridColumn, Grid, Icon, Menu, Segment, Image, Accordion, Input,
+  Checkbox, GridColumn, Grid, Icon, Menu, Segment, Image, Container, Accordion, Input,
 } from 'semantic-ui-react';
 import happyFace from './happy_face.png';
 import neutralFace from './neutral_face.png';
@@ -26,6 +26,7 @@ function App() {
   const [openScheduleBreaks, setOpenScheduleBreaks] = useState(false);
   const [openEyeStrainBreaks, setOpenEyeStrainBreaks] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentMood, setCurrentMood] = useState();
 
   useEffect(() => {
     window.electron.handshake();
@@ -62,6 +63,63 @@ function App() {
         eyeStrainBreaks]);
     }
   }, [scheduleBreaks, eyeStrainBreaks]);
+
+  const MOODS = {
+    'Happy Face':
+  <Container>
+    You’re feeling good! Keep spirits high by;
+    <ul>
+      <li>
+        Giving yourself regular breaks
+      </li>
+      <li>
+        Taking a daily walk
+      </li>
+      <li>
+        Chatting with friends
+      </li>
+      <li>
+        Get outside
+      </li>
+    </ul>
+  </Container>,
+    'Neutral Face':
+  <Container>
+    If you’re feeling unsure there a few things you can do to help you feel calmer;
+    <ul>
+      <li>
+        Focus on relaxing
+      </li>
+      <li>
+        Get outdoors and take a walk
+      </li>
+      <li>
+        Listen to your favourite playlist
+      </li>
+    </ul>
+  </Container>,
+    'Sad Face':
+  <Container>
+    If you’re feeling down, take some time to yourself to help gather your thoughts;
+    <ul>
+      <li>
+        Take a step back
+      </li>
+      <li>
+        Focus on relaxing
+      </li>
+      <li>
+        Rest and re-charge
+      </li>
+      <li>
+        Reach out for support
+      </li>
+      <li>
+        Access our support tools
+      </li>
+    </ul>
+  </Container>,
+  };
 
   const VIEWS = {
     'Manage your screen time':
@@ -182,16 +240,19 @@ function App() {
     <p>How are you feeling today?</p>
     <Grid>
       <GridColumn>
-        <Image className="wellbeing-indicator" as="button" src={happyFace} size="medium" onClick={() => console.log('do something')} />
+        <Image className="wellbeing-indicator" as="button" src={happyFace} size="medium" onClick={() => setCurrentMood('Happy Face')} />
       </GridColumn>
       <GridColumn>
-        <Image className="wellbeing-indicator" as="button" src={neutralFace} size="medium" onClick={() => console.log('do something')} />
+        <Image className="wellbeing-indicator" as="button" src={neutralFace} size="medium" onClick={() => setCurrentMood('Neutral Face')} />
       </GridColumn>
       <GridColumn>
-        <Image className="wellbeing-indicator" as="button" src={sadFace} size="medium" onClick={() => console.log('do something')} />
+        <Image className="wellbeing-indicator" as="button" src={sadFace} size="medium" onClick={() => setCurrentMood('Sad Face')} />
       </GridColumn>
     </Grid>
+    <Spacing />
+    {MOODS[currentMood]}
   </Segment>,
+
   };
   return (
     <>
