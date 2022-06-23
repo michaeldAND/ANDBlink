@@ -36,7 +36,7 @@ function parseTime(time) {
 
   if (secs > 0) {
     message.push(`${secs} secs`);
-  } 
+  }
 
   return { isShort, message: message.join(', ') };
 }
