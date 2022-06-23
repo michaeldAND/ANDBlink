@@ -8,13 +8,16 @@ The user will have two break patterns to choose from:
 The app will have default rules for these breaks the fifty ten rule and the twenty twenty rule.
 
 ## To run locally:
-```
-npm install
-```
 
 You will need to have Mongodb running locally see [MongoDB docs](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/) for more information.
+Or use:
 ```
 brew install mongodb-community@5.0
+```
+
+Then run:
+```
+npm install
 
 npm run seeds
 
