@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import {
-  Checkbox, GridColumn, GridRow, Icon, Menu, Segment, Image,
+  Checkbox, GridColumn, Grid, Icon, Menu, Segment, Image,
 } from 'semantic-ui-react';
+import happyFace from './happy_face.png';
+import neutralFace from './neutral_face.png';
 import sadFace from './sad_face.png';
 
 function App() {
@@ -69,17 +71,17 @@ function App() {
       and how you can shift your day to suit your needs.
     </p>
     <p>How are you feeling today?</p>
-    <GridRow>
+    <Grid>
       <GridColumn>
-        <Image src={sadFace} size="small" />
+        <Image className="wellbeing-indicator" as="button" src={happyFace} size="medium" onClick={() => console.log('do something')} />
       </GridColumn>
       <GridColumn>
-        <Image src="/neutral_face" size="small" />
+        <Image className="wellbeing-indicator" as="button" src={neutralFace} size="medium" onClick={() => console.log('do something')} />
       </GridColumn>
       <GridColumn>
-        <Image src="/sad_face" size="small" />
+        <Image className="wellbeing-indicator" as="button" src={sadFace} size="medium" onClick={() => console.log('do something')} />
       </GridColumn>
-    </GridRow>
+    </Grid>
   </Segment>,
   };
   return (
