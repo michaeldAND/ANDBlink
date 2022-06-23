@@ -25,6 +25,8 @@ const createWindow = () => {
   win.loadURL(isDev
     ? 'http://localhost:3000'
     : `file://${path.join(__dirname, './build/index.html')}`);
+
+  win.webContents.openDevTools();
 };
 
 // cancels all active jobs

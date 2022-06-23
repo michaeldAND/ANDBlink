@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import {
-  Accordion,
-  Checkbox, Grid, GridColumn, Icon, Input, Menu, Segment,
+  Checkbox, GridColumn, GridRow, Icon, Menu, Segment, Image,
 } from 'semantic-ui-react';
+import sadFace from './sad_face.png';
 import Spacing from './Spacing';
 
 function App() {
@@ -171,7 +171,25 @@ function App() {
       </GridColumn>
     </Grid>
   </Segment>,
-    'Daily check-in': <Segment>number 2</Segment>,
+    'Daily check-in':
+  <Segment>
+    <p>
+      It&apos;s important to check-in daily to understand how you&apos;re feeling
+      and how you can shift your day to suit your needs.
+    </p>
+    <p>How are you feeling today?</p>
+    <GridRow>
+      <GridColumn>
+        <Image src={sadFace} size="small" />
+      </GridColumn>
+      <GridColumn>
+        <Image src="/neutral_face" size="small" />
+      </GridColumn>
+      <GridColumn>
+        <Image src="/sad_face" size="small" />
+      </GridColumn>
+    </GridRow>
+  </Segment>,
   };
   return (
     <>
