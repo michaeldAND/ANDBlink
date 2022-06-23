@@ -9,8 +9,8 @@ import Spacing from './Spacing';
 
 function App() {
   const [scheduleBreaks, setScheduleBreaks] = useState({
-    workTime: 1000,
-    breakTime: 50,
+    workTime: 3000,
+    breakTime: 600,
     active: false,
     name: 'scheduleBreaks',
   });
@@ -94,7 +94,7 @@ function App() {
             {' '}
             <Input
               type="number"
-              value={scheduleBreaks.workTime}
+              value={Math.floor(scheduleBreaks.workTime / 60)}
               onChange={(event) => setScheduleBreaks((prev) => ({
                 ...prev,
                 workTime: parseInt(event.target.value * 60, 10),
@@ -108,7 +108,7 @@ function App() {
             {' '}
             <Input
               type="number"
-              value={scheduleBreaks.breakTime}
+              value={Math.floor(scheduleBreaks.breakTime / 60)}
               onChange={(event) => setScheduleBreaks((prev) => ({
                 ...prev,
                 breakTime: parseInt(event.target.value * 60, 10),
@@ -151,10 +151,10 @@ function App() {
             {' '}
             <Input
               type="number"
-              value={eyeStrainBreaks.workTime}
+              value={Math.floor(eyeStrainBreaks.workTime / 60)}
               onChange={(event) => setEyeStrainBreaks((prev) => ({
                 ...prev,
-                breakTime: parseInt(event.target.value * 60, 10),
+                workTime: parseInt(event.target.value * 60, 10),
               }))}
             />
             {' '}
