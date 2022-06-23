@@ -20,11 +20,11 @@ npm run start-react
 npm run start:nodemon
 
 Allow notifications in settings from electron.
-![Settings for Electron](/assets/images/settingsElectron.png)
+![Settings for Electron](/assets/settingsElectron.png)
 
 
 ## To build:
 npm run build
 
 Allow notifications in settings from ANDBlink.
-![Settings for ANDBlink](/assets/images/settingsANDBlink.png)
+![Settings for ANDBlink](/assets/settingsANDBlink.png)
