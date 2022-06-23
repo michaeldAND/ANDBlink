@@ -23,6 +23,7 @@ function App() {
   const [activeItem, setActiveItem] = useState('Manage your screen time');
   const [openScheduleBreaks, setOpenScheduleBreaks] = useState(false);
   const [openEyeStrainBreaks, setOpenEyeStrainBreaks] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     window.electron.handshake();
@@ -47,14 +48,17 @@ function App() {
 
       }));
     });
+    setLoading(true);
   }, []);
 
   useEffect(() => {
-    console.log('scheduleBreaks', scheduleBreaks);
-    console.log('eyeStrainbreaks', eyeStrainBreaks);
+    if (loading) {
+      console.log('scheduleBreaks', scheduleBreaks);
+      console.log('eyeStrainbreaks', eyeStrainBreaks);
 
-    window.electron.sendSettings([scheduleBreaks,
-      eyeStrainBreaks]);
+      window.electron.sendSettings([scheduleBreaks,
+        eyeStrainBreaks]);
+    }
   }, [scheduleBreaks, eyeStrainBreaks]);
 
   const VIEWS = {
