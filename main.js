@@ -26,7 +26,7 @@ const createWindow = () => {
     ? 'http://localhost:3000'
     : `file://${path.join(__dirname, './build/index.html')}`);
 
-  if (isDev) win.webContents.openDevTools();
+  win.webContents.openDevTools();
 };
 
 // cancels all active jobs

@@ -12,11 +12,13 @@ function App() {
     workTime: 1000,
     breakTime: 50,
     active: false,
+    name: 'scheduleBreaks',
   });
   const [eyeStrainBreaks, setEyeStrainBreaks] = useState({
     workTime: 1200,
     breakTime: 20,
     active: false,
+    name: 'eyeStrainBreaks',
   });
   const [activeItem, setActiveItem] = useState('Manage your screen time');
   const [openScheduleBreaks, setOpenScheduleBreaks] = useState(false);
@@ -25,7 +27,6 @@ function App() {
   useEffect(() => {
     window.electron.handshake();
     window.electron.recieveSettings((settings) => {
-      // TODO: Investigate call occurence
       console.log('SETTINGS', settings);
       setOpenScheduleBreaks(settings[0].active);
       setOpenEyeStrainBreaks(settings[1].active);
@@ -44,17 +45,18 @@ function App() {
         workTime: settings[1].workTime,
         breakTime: settings[1].breakTime,
         active: settings[1].active,
+
       }));
     });
   }, []);
 
   useEffect(() => {
     // construct the array]
-    console.log('yolo', scheduleBreaks);
-    console.log('yolo 2', eyeStrainBreaks);
+    console.log('scheduleBreaks', scheduleBreaks);
+    console.log('eyeStrainbreaks', eyeStrainBreaks);
 
     window.electron.sendSettings([scheduleBreaks,
-      { workTime: 500, breakTime: 20, active: eyeStrainBreaks }]);
+      eyeStrainBreaks]);
   }, [scheduleBreaks, eyeStrainBreaks]);
 
   const VIEWS = {
@@ -94,7 +96,7 @@ function App() {
               type="number"
               onChange={(event) => setScheduleBreaks((prev) => ({
                 ...prev,
-                workTime: event.target.value,
+                workTime: parseInt(event.target.value * 60, 10),
               }))}
             />
             {' '}
@@ -103,7 +105,13 @@ function App() {
             <Spacing />
             The break should last
             {' '}
-            <Input type="number" />
+            <Input
+              type="number"
+              onChange={(event) => setScheduleBreaks((prev) => ({
+                ...prev,
+                breakTime: parseInt(event.target.value * 60, 10),
+              }))}
+            />
             {' '}
             minutes
 
@@ -130,7 +138,25 @@ function App() {
               onClick={() => setOpenEyeStrainBreaks(!openEyeStrainBreaks)}
             />
           </Accordion.Title>
-          <Accordion.Content active={openEyeStrainBreaks}>content</Accordion.Content>
+          <Accordion.Content active={openEyeStrainBreaks}>
+            If youre staring at a screen for a long periods of time,
+            looking away for 20 seconds every 20 minutes can help reduce the strain of your eyes.
+
+            <Spacing />
+
+            Remind me to look away every
+
+            {' '}
+            <Input
+              type="number"
+              onChange={(event) => setEyeStrainBreaks((prev) => ({
+                ...prev,
+                breakTime: parseInt(event.target.value * 60, 10),
+              }))}
+            />
+            {' '}
+            minutes
+          </Accordion.Content>
         </Accordion>
       </GridColumn>
     </Grid>
