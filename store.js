@@ -4,6 +4,7 @@ const {
 } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const data = require('./data');
 
 function createCron(time) {
   const cron = ['*', '*', '*', '*', '*', '*'];
@@ -48,20 +49,15 @@ class Store {
   constructor() {
     const userDataPath = app.getPath('userData');
     this.path = path.join(userDataPath, 'settings.json');
-    const defaults = [
-      { workTime: 3000, breakTime: 600, active: false },
-      { workTime: 1200, breakTime: 20, active: true },
-      { workTime: 7, breakTime: 3, active: true },
-    ];
-    this.parseDataFile(this.path, defaults);
+    this.parseDataFile(this.path);
   }
 
-  parseDataFile(filePath, defaults) {
+  parseDataFile(filePath) {
     try {
       this.settings = JSON.parse(fs.readFileSync(filePath));
     } catch (error) {
       // if there was some kind of error, resets file to default.
-      this.set(defaults);
+      this.set(data.defaultSettings);
       console.log('Caught error:', error);
     }
   }
@@ -86,6 +82,10 @@ class Store {
   set(value) {
     this.settings = value;
     fs.writeFileSync(this.path, JSON.stringify(value));
+  }
+
+  resetToDefaults() {
+    this.set(data.defaultSettings);
   }
 }
 
