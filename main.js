@@ -1,8 +1,8 @@
 const {
   app, BrowserWindow, Notification, powerMonitor, ipcMain,
 } = require('electron');
-const schedule = require('node-schedule');
 const path = require('path');
+const { clearInterval } = require('timers');
 
 const content = require('./data');
 const Store = require('./store');
@@ -29,15 +29,7 @@ const createWindow = () => {
 
 // cancels all active jobs
 function cancelJobs() {
-  tasks.forEach((task) => task.job.cancel());
-}
-
-// restarts all cancelled job, as the user just took their break
-function restartJobs() {
-  tasks.forEach((task, index) => {
-    task.job.reschedule(task.workCron);
-    tasks[index].isWork = true;
-  });
+  tasks.forEach((job) => clearInterval(job));
 }
 
 function createNotification(title, body) {
@@ -55,24 +47,17 @@ function scheduleJobs() {
     if (!setting.active) {
       return;
     }
-    tasks[index] = { isWork: true, workCron: setting.workCron, breakCron: setting.breakCron };
-    console.log('creating scheduled job', index);
-    const job = schedule.scheduleJob(setting.workCron, () => {
-      if (!tasks[index].isWork) {
-        console.log('notify to take break', new Date());
-        // depending on the break size, show different messages
-        const contentArray = setting.isShort ? content.short : content.long;
-        const random = getRandomInt(contentArray.length);
-        // replace title string with appropriate break time period
-        let { title } = contentArray[random];
-        title = title.replace('%REPLACE%', setting.message);
-        createNotification(title, contentArray[random].body);
-      }
-      // assign the rescheduling of the job to always alternate between work and break
-      tasks[index].isWork = !tasks[index].isWork;
-      job.reschedule(tasks[index].isWork ? setting.workCron : setting.breakCron);
-    });
-    tasks[index].job = job;
+    const job = setInterval(() => {
+      console.log('notify to take break?', new Date(), tasks);
+      // depending on the break size, show different messages
+      const contentArray = setting.isShort ? content.short : content.long;
+      const random = getRandomInt(contentArray.length);
+      // replace title string with appropriate break time period
+      let { title } = contentArray[random];
+      title = title.replace('%REPLACE%', setting.message);
+      createNotification(title, contentArray[random].body);
+    }, (setting.workTime + setting.breakTime) * 1000);
+    tasks[index] = job;
   });
 }
 
@@ -105,7 +90,7 @@ app.whenReady().then(() => {
 
   powerMonitor.on('resume', () => {
     console.log('resume');
-    restartJobs();
+    refreshNotifications();
   });
 
   powerMonitor.on('lock-screen', () => {
@@ -115,7 +100,7 @@ app.whenReady().then(() => {
 
   powerMonitor.on('unlock-screen', () => {
     console.log('unlocked');
-    restartJobs();
+    refreshNotifications();
   });
 
   app.on('activate', () => {

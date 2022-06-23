@@ -6,18 +6,17 @@ const path = require('path');
 const fs = require('fs');
 const data = require('./data');
 
-function createCron(time) {
-  const cron = ['*', '*', '*', '*', '*', '*'];
+function parseTime(time) {
   let hours;
   let mins;
   let secs = time;
   let isShort = false;
 
   // timer is passed in seconds, break down to minutes and hours
-  if (time > 60) {
+  if (time >= 60) {
     mins = Math.floor(time / 60);
     secs = time % 60;
-    if (mins > 60) {
+    if (mins >= 60) {
       hours = Math.floor(mins / 60);
       mins %= 60;
     }
@@ -28,21 +27,18 @@ function createCron(time) {
   // formulate a display message for the actual time for the user to see
   const message = [];
   if (hours > 0) {
-    cron[2] = `*/${hours}`;
     message.push(`${hours} hrs`);
   }
 
   if (mins > 0) {
-    cron[1] = `*/${mins}`;
     message.push(`${mins} mins`);
   }
 
   if (secs > 0) {
-    cron[0] = `*/${secs}`;
     message.push(`${secs} secs`);
-  }
+  } 
 
-  return { cron: cron.join(' '), isShort, message: message.join(', ') };
+  return { isShort, message: message.join(', ') };
 }
 
 class Store {
@@ -55,6 +51,7 @@ class Store {
   parseDataFile(filePath) {
     try {
       this.settings = JSON.parse(fs.readFileSync(filePath));
+      console.log('read settings', this.settings);
     } catch (error) {
       // if there was some kind of error, resets file to default.
       this.set(data.defaultSettings);
@@ -62,20 +59,18 @@ class Store {
     }
   }
 
-  createCronForData() {
+  parseData() {
     this.data = [...this.settings];
     this.data.forEach((element, index) => {
-      this.data[index].workCron = createCron(element.workTime).cron;
-      const breakData = createCron(element.breakTime);
-      this.data[index].breakCron = breakData.cron;
+      const breakData = parseTime(element.breakTime);
       this.data[index].isShort = breakData.isShort;
       this.data[index].message = breakData.message;
     });
   }
 
-  // adds the CRONS into the RAW data and returns it.
+  // adds the message
   get() {
-    this.createCronForData(this.settings);
+    this.parseData(this.settings);
     return this.data;
   }
 
