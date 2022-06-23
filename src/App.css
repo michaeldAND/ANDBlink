@@ -1,3 +1,8 @@
 .float-right {
     float: right;
 }
+
+.wellbeing-indicator {
+    cursor: pointer;
+    padding: 0;
+}
