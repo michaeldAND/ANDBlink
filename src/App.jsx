@@ -235,7 +235,7 @@ function App() {
           </Accordion.Content>
         </Accordion>
         <Spacing />
-        <Button floated="right" nClick={() => window.electron.restoreDefaults()}>Restore settings</Button>
+        <Button floated="right" onClick={() => window.electron.restoreDefaults()}>Restore settings</Button>
       </GridColumn>
     </Grid>
 
