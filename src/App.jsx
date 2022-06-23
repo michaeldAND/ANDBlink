@@ -99,7 +99,7 @@ function App() {
             <Input
               type="number"
               value={Math.floor(scheduleBreaks.workTime / 60)}
-              min={0}
+              min={1}
               onChange={(event) => setScheduleBreaks((prev) => ({
                 ...prev,
                 workTime: parseInt(event.target.value * 60, 10),
@@ -113,7 +113,7 @@ function App() {
             {' '}
             <Input
               type="number"
-              min={0}
+              min={1}
               value={Math.floor(scheduleBreaks.breakTime / 60)}
               onChange={(event) => setScheduleBreaks((prev) => ({
                 ...prev,
@@ -157,7 +157,7 @@ function App() {
             {' '}
             <Input
               type="number"
-              min={0}
+              min={1}
               value={Math.floor(eyeStrainBreaks.workTime / 60)}
               onChange={(event) => setEyeStrainBreaks((prev) => ({
                 ...prev,
