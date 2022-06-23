@@ -12,5 +12,8 @@ contextBridge.exposeInMainWorld(
     handshake: () => {
       ipcRenderer.send('handshake');
     },
+    restoreDefaults: () => {
+      ipcRenderer.send('restore-defaults');
+    },
   },
 );
