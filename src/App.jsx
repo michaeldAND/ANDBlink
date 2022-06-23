@@ -27,7 +27,6 @@ function App() {
   useEffect(() => {
     window.electron.handshake();
     window.electron.recieveSettings((settings) => {
-      console.log('SETTINGS', settings);
       setOpenScheduleBreaks(settings[0].active);
       setOpenEyeStrainBreaks(settings[1].active);
       setScheduleBreaks((prev) => ({
@@ -51,7 +50,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // construct the array]
     console.log('scheduleBreaks', scheduleBreaks);
     console.log('eyeStrainbreaks', eyeStrainBreaks);
 
@@ -90,11 +88,14 @@ function App() {
           <Accordion.Content active={openScheduleBreaks}>
             Schedule breaks throughout the day to rest.
             Get away from the laptop, move around or standup.
+
+            <Spacing />
             Schedule a break every
             {' '}
             <Input
               type="number"
               value={Math.floor(scheduleBreaks.workTime / 60)}
+              min={0}
               onChange={(event) => setScheduleBreaks((prev) => ({
                 ...prev,
                 workTime: parseInt(event.target.value * 60, 10),
@@ -108,6 +109,7 @@ function App() {
             {' '}
             <Input
               type="number"
+              min={0}
               value={Math.floor(scheduleBreaks.breakTime / 60)}
               onChange={(event) => setScheduleBreaks((prev) => ({
                 ...prev,
@@ -151,6 +153,7 @@ function App() {
             {' '}
             <Input
               type="number"
+              min={0}
               value={Math.floor(eyeStrainBreaks.workTime / 60)}
               onChange={(event) => setEyeStrainBreaks((prev) => ({
                 ...prev,
