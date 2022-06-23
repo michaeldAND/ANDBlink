@@ -66,7 +66,7 @@ function App() {
     <Spacing />
 
     <Grid padded="vertically">
-      <GridColumn width={8}>
+      <GridColumn width={10}>
         <Accordion fluid styled padded="vertically">
           <Accordion.Title active={openScheduleBreaks}>
             <Checkbox
@@ -94,6 +94,7 @@ function App() {
             {' '}
             <Input
               type="number"
+              value={scheduleBreaks.workTime}
               onChange={(event) => setScheduleBreaks((prev) => ({
                 ...prev,
                 workTime: parseInt(event.target.value * 60, 10),
@@ -107,6 +108,7 @@ function App() {
             {' '}
             <Input
               type="number"
+              value={scheduleBreaks.breakTime}
               onChange={(event) => setScheduleBreaks((prev) => ({
                 ...prev,
                 breakTime: parseInt(event.target.value * 60, 10),
@@ -149,6 +151,7 @@ function App() {
             {' '}
             <Input
               type="number"
+              value={eyeStrainBreaks.workTime}
               onChange={(event) => setEyeStrainBreaks((prev) => ({
                 ...prev,
                 breakTime: parseInt(event.target.value * 60, 10),
